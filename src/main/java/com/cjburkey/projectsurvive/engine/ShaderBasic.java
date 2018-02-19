@@ -1,6 +1,7 @@
 package com.cjburkey.projectsurvive.engine;
 
 import static org.lwjgl.opengl.GL20.*;
+import com.cjburkey.projectsurvive.engine.component.CameraComponent;
 
 public class ShaderBasic extends Shader {
 	
@@ -13,10 +14,13 @@ public class ShaderBasic extends Shader {
 		link();
 		
 		addUniform("projectionMatrix");
+		addUniform("worldMatrix");
+		
+		Logger.log("Loaded basic shader program.");
 	}
 	
-	public void render(Camera camera) {
-		setUniform("projectionMatrix", camera.getProjection());
+	public void render(GameObject camera) {
+		setUniform("projectionMatrix", camera.getComponent(CameraComponent.class).getCamera().getProjection());
 	}
 	
 }

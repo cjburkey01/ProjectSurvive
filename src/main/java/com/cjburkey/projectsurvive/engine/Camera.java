@@ -7,8 +7,6 @@ import org.joml.Vector2i;
 
 public class Camera {
 	
-	private Transform transform;
-	
 	private float fov = 0.0f;
 	private float zNear = 0.0f;
 	private float zFar = 0.0f;
@@ -16,14 +14,12 @@ public class Camera {
 	
 	private Matrix4f projection;
 	
-	public Camera(GameWindow window) {
-		transform = new Transform();
-		
+	public Camera() {
 		fov = 90.0f;
 		zNear = 0.01f;
 		zFar = 1000.0f;
-		Vector2i windowS = window.getWindowSize();
-		aspectRatio = (float) windowS.x / windowS.y;
+		Vector2i size = GameEngine.getEngine().getWindow().getWindowSize();
+		aspectRatio = (float) size.x / size.y;
 		updateProjection();
 		
 		cams.add(this);
@@ -71,10 +67,6 @@ public class Camera {
 
 	public Matrix4f getProjection() {
 		return projection;
-	}
-	
-	public Transform getTransform() {
-		return transform;
 	}
 	
 	public void destroy() {

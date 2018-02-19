@@ -24,7 +24,7 @@ public abstract class Shader {
 	}
 	
 	public abstract void init();
-	public abstract void render(Camera camera);
+	public abstract void render(GameObject camera);
 	
 	public void destroy() {
 		unbind();

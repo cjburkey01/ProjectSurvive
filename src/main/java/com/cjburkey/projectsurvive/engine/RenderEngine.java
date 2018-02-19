@@ -5,18 +5,19 @@ import java.util.List;
 
 public abstract class RenderEngine {
 	
-	private Camera mainCamera;
+	private GameObject mainCamera;
 	
 	public abstract void init();
 	public abstract void render(GameObject root);
 	public abstract void destroy();
 	
-	public Camera getMainCamera() {
+	public GameObject getMainCamera() {
 		return mainCamera;
 	}
 	
-	public void setMainCamera(Camera mainCamera) {
+	public void setMainCamera(GameObject mainCamera) {
 		this.mainCamera = mainCamera;
+		Logger.log("Camera set to: " + mainCamera);
 	}
 	
 	private static final List<RenderEngine> engines = new ArrayList<RenderEngine>();
@@ -37,6 +38,10 @@ public abstract class RenderEngine {
 		if (!engines.contains(engine)) {
 			engines.add(engine);
 		}
+	}
+	
+	public static RenderEngine[] getEngines() {
+		return engines.toArray(new RenderEngine[engines.size()]);
 	}
 	
 }

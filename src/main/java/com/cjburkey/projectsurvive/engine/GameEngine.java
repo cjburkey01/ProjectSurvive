@@ -99,10 +99,18 @@ public class GameEngine {
 		return fps;
 	}
 	
+	public double getDeltaTime() {
+		return delta;
+	}
+	
 	private void tick() {
 		window.pollEvents();
+		
+		Scene.getActiveScene().getRoot().onUpdate();
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		RenderEngine.onRender(Scene.getActiveScene().getRoot());
+		
 		window.swapBuffers();
 	}
 	
@@ -118,10 +126,11 @@ public class GameEngine {
 		gameEngine = new GameEngine();
 		gameEngine.loadGame();
 		gameEngine.createWindow();
-		Scene.create();
 		gameEngine.initRender();
 		RenderEngine.onInit();
+		Scene.create();
 		gameEngine.startGameLoop();
+		Scene.getActiveScene().getRoot().onDestroy();
 	}
 	
 	public static GameEngine getEngine() {

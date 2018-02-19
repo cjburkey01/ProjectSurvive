@@ -1,5 +1,9 @@
 package com.cjburkey.projectsurvive.engine;
 
+import com.cjburkey.projectsurvive.engine.component.MeshComponent;
+import com.cjburkey.projectsurvive.engine.event.EventHandler;
+import com.cjburkey.projectsurvive.engine.events.EventSceneCreated;
+
 public class BasicRenderer extends RenderEngine {
 	
 	private ShaderBasic shader;
@@ -24,24 +28,30 @@ public class BasicRenderer extends RenderEngine {
 		
 		mesh = new Mesh();
 		mesh.setMesh(verts, inds);
+		
+		EventHandler.getEventHandler().addListener(EventSceneCreated.class, (e) -> {
+			GameObject meshObj = Scene.getActiveScene().getRoot().addChild("MeshTest");
+			meshObj.addComponent(new MeshComponent(meshObj));
+			meshObj.getComponent(MeshComponent.class).setMesh(mesh);
+		});
 	}
 	
 	public void render(GameObject root) {
 		shader.bind();
 		shader.render(getMainCamera());
 		
-		mesh.render();
+		renderObj(root);
 		
 		Shader.unbind();
-		
-		//renderObj(root);
 	}
 	
-//	private void renderObj(GameObject obj) {
-//		for (GameObject child : obj.getChildren()) {
-//			renderObj(child);
-//		}
-//	}
+	private void renderObj(GameObject obj) {
+		shader.setUniform("worldMatrix", obj.getTransform().getWorldMatrix());
+		obj.onRender();
+		for (GameObject child : obj.getChildren()) {
+			renderObj(child);
+		}
+	}
 	
 	public void destroy() {
 		shader.destroy();
