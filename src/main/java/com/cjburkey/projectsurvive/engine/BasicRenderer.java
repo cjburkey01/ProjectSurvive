@@ -1,5 +1,6 @@
 package com.cjburkey.projectsurvive.engine;
 
+import com.cjburkey.projectsurvive.engine.component.CameraComponent;
 import com.cjburkey.projectsurvive.engine.component.KeyboardController;
 import com.cjburkey.projectsurvive.engine.component.MeshComponent;
 import com.cjburkey.projectsurvive.engine.event.EventHandler;
@@ -34,9 +35,10 @@ public class BasicRenderer extends RenderEngine {
 			GameObject meshObj = Scene.getActiveScene().getRoot().addChild("MeshTest");
 			meshObj.getTransform().getPosition().z = -1.0f;
 			meshObj.addComponent(new MeshComponent(meshObj));
-			meshObj.addComponent(new KeyboardController(meshObj));
+			//meshObj.addComponent(new KeyboardController(meshObj));
 			meshObj.getComponent(MeshComponent.class).setMesh(mesh);
-			Logger.log("Scene created.");
+			
+			getMainCamera().addComponent(new KeyboardController(getMainCamera()));
 		});
 	}
 	
@@ -50,7 +52,7 @@ public class BasicRenderer extends RenderEngine {
 	}
 	
 	private void renderObj(GameObject obj) {
-		shader.setUniform("worldMatrix", obj.getTransform().getWorldMatrix());
+		shader.setUniform("modelViewMatrix", getMainCamera().getComponent(CameraComponent.class).getModelViewMatrix(obj));
 		obj.onRender();
 		for (GameObject child : obj.getChildren()) {
 			renderObj(child);

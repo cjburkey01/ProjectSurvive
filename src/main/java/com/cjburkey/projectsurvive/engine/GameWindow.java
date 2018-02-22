@@ -39,7 +39,7 @@ public class GameWindow {
 		}
 		center();
 		glfwMakeContextCurrent(window);
-		setVsync(false);	// VSync every frame.
+		setVsync(false);
 		show();
 		
 		glfwSetWindowSizeCallback(window, (window, w, h) -> onResize(new Vector2i(w, h)));

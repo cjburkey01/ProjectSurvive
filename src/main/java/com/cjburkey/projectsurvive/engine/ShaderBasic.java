@@ -14,7 +14,7 @@ public class ShaderBasic extends Shader {
 		link();
 		
 		addUniform("projectionMatrix");
-		addUniform("worldMatrix");
+		addUniform("modelViewMatrix");
 		
 		Logger.log("Loaded basic shader program.");
 	}
