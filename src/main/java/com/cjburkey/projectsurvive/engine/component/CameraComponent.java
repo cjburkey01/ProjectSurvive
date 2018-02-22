@@ -1,6 +1,7 @@
 package com.cjburkey.projectsurvive.engine.component;
 
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import com.cjburkey.projectsurvive.engine.Camera;
 import com.cjburkey.projectsurvive.engine.GameComponent;
@@ -20,7 +21,7 @@ public class CameraComponent extends GameComponent {
 	public void onRender() {
 		viewMatrix.identity();
 		Vector3f pos = getParent().getTransform().getPosition();
-		viewMatrix.rotate(getParent().getTransform().getRotation());
+		viewMatrix.rotate(new Quaternionf(getParent().getTransform().getRotation()).invert());
 		viewMatrix.translate(-pos.x, -pos.y, -pos.z);
 	}
 	

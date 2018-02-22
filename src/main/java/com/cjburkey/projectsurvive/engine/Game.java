@@ -8,7 +8,4 @@ public abstract class Game {
 	public void onUpdate() {
 	}
 	
-	public void onInput() {
-	}
-	
 }

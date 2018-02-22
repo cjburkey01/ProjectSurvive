@@ -26,4 +26,9 @@ public class MathHelper {
 		return quat;
 	}
 	
+	public static Vector3f transform(Quaternionf rotation, Vector3f direction) {
+		direction = new Vector3f(direction);
+		return rotation.transform(direction);
+	}
+	
 }

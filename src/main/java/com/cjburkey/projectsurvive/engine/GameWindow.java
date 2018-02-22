@@ -2,6 +2,7 @@ package com.cjburkey.projectsurvive.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -55,10 +56,23 @@ public class GameWindow {
 			}
 		});
 		
+		glfwSetCursorPosCallback(window, (window, x, y) -> {
+			if (window != this.window) {
+				return;
+			}
+			Input.onMouseMove(new Vector2f((float) x, (float) y));
+		});
+		
 		glCaps = GL.createCapabilities();
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glClearColor(100 / 255.0f, 149 / 255.0f, 237 / 255.0f, 1.0f);
+		
+		lockCursor(true);
+	}
+	
+	public void lockCursor(boolean lock) {
+		glfwSetInputMode(window, GLFW_CURSOR, (lock) ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 	}
 	
 	public void setTitle(String title) {

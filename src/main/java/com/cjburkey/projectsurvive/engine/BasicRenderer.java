@@ -3,6 +3,7 @@ package com.cjburkey.projectsurvive.engine;
 import com.cjburkey.projectsurvive.engine.component.CameraComponent;
 import com.cjburkey.projectsurvive.engine.component.KeyboardController;
 import com.cjburkey.projectsurvive.engine.component.MeshComponent;
+import com.cjburkey.projectsurvive.engine.component.MouseRotation;
 import com.cjburkey.projectsurvive.engine.event.EventHandler;
 import com.cjburkey.projectsurvive.engine.events.EventSceneCreated;
 
@@ -25,7 +26,10 @@ public class BasicRenderer extends RenderEngine {
 		
 		int[] inds = new int[] {
 			0, 1, 2,
-			2, 3, 0
+			2, 3, 0,
+
+			2, 1, 0,
+			0, 3, 2
 		};
 		
 		mesh = new Mesh(1);
@@ -35,10 +39,10 @@ public class BasicRenderer extends RenderEngine {
 			GameObject meshObj = Scene.getActiveScene().getRoot().addChild("MeshTest");
 			meshObj.getTransform().getPosition().z = -1.0f;
 			meshObj.addComponent(new MeshComponent(meshObj));
-			//meshObj.addComponent(new KeyboardController(meshObj));
 			meshObj.getComponent(MeshComponent.class).setMesh(mesh);
 			
 			getMainCamera().addComponent(new KeyboardController(getMainCamera()));
+			getMainCamera().addComponent(new MouseRotation(getMainCamera()));
 		});
 	}
 	

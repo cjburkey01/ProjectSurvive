@@ -2,15 +2,21 @@ package com.cjburkey.projectsurvive.engine;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.joml.Vector2f;
 
 public class Input {
 	
-	private static Map<Integer, Boolean> keysDown = new HashMap<>();
+	private static final Map<Integer, Boolean> keysDown = new HashMap<>();
+	private static final Vector2f mousePos = new Vector2f();
+	private static final Vector2f mouseDelta = new Vector2f();
+	private static final Vector2f prevMousePos = new Vector2f();
 	
 	public static void onUpdate() {
 		for (Integer i : keysDown.keySet()) {
 			keysDown.put(i, false);
 		}
+		prevMousePos.set(mousePos);
+		mouseDelta.set(0.0f, 0.0f);
 	}
 	
 	/**
@@ -32,6 +38,15 @@ public class Input {
 			return keysDown.get(key);
 		}
 		return false;
+	}
+	
+	public static Vector2f getMouseDelta() {
+		return mouseDelta;
+	}
+	
+	public static void onMouseMove(Vector2f pos) {
+		mousePos.set(pos);
+		mousePos.sub(prevMousePos, mouseDelta);
 	}
 	
 	public static void onKeyPress(int key) {

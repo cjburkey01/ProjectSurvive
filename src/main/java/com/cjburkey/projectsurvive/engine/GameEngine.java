@@ -9,6 +9,7 @@ import org.reflections.Reflections;
 public class GameEngine {
 	
 	public static final long EXPECTED_TPS = 60;
+	public static Game loadedGame = null;
 	private static GameEngine gameEngine;
 	
 	private Reflections ref;
@@ -17,6 +18,7 @@ public class GameEngine {
 	private double steps = 0.0f;
 	private double delta = 0.0f;
 	private long fps = 0;
+	private boolean running = false;
 	
 	private BasicRenderer renderer;
 	
@@ -32,14 +34,16 @@ public class GameEngine {
 		if (games.size() != 1) {
 			throw new GameEngineException("Multiple game classes found, unable to select game.");
 		}
-		Game game = null;
 		try {
-			game = games.get(0).newInstance();
+			loadedGame = games.get(0).newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 			throw new GameEngineException("Failed to create an instance of the game class.");
 		}
-		Logger.log("Loading game: " + game.getName() + ". Version: " + game.getVersion());
+		if (loadedGame == null) {
+			throw new GameEngineException("No game was loaded...failure to launch game.");
+		}
+		Logger.log("Loading game: " + loadedGame.getName() + ". Version: " + loadedGame.getVersion());
 	}
 	
 	private void createWindow() {
@@ -63,14 +67,14 @@ public class GameEngine {
 		if (windowStartTitle == null) {
 			windowStartTitle = window.getTitle();
 		}
-		while (true) {
+		running = true;
+		while (running) {
 			double loopStart = getTime();
 			delta = loopStart - last;
 			steps += delta;
 			
 			tick();
 			if (window.getShouldClose()) {
-				window.destroy();
 				break;
 			}
 			
@@ -86,6 +90,11 @@ public class GameEngine {
 			last = loopStart;
 		}
 		Logger.log("Exiting game.");
+		window.destroy();
+	}
+	
+	public void exit() {
+		running = false;
 	}
 	
 	public double getGameTime() {
@@ -104,6 +113,7 @@ public class GameEngine {
 		window.pollEvents();
 		
 		Scene.getActiveScene().getRoot().onUpdate();
+		loadedGame.onUpdate();
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		RenderEngine.onRender(Scene.getActiveScene().getRoot());
