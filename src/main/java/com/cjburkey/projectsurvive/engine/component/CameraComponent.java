@@ -20,8 +20,7 @@ public class CameraComponent extends GameComponent {
 	public void onRender() {
 		viewMatrix.identity();
 		Vector3f pos = getParent().getTransform().getPosition();
-		Vector3f rot = getParent().getTransform().getRotation();
-		viewMatrix.rotate((float) Math.toRadians(rot.x), new Vector3f(1.0f, 0.0f, 0.0f)).rotate((float) Math.toRadians(rot.y), new Vector3f(0.0f, 1.0f, 0.0f)).rotate((float) Math.toRadians(rot.z), new Vector3f(0.0f, 0.0f, 1.0f));
+		viewMatrix.rotate(getParent().getTransform().getRotation());
 		viewMatrix.translate(-pos.x, -pos.y, -pos.z);
 	}
 	
@@ -34,10 +33,9 @@ public class CameraComponent extends GameComponent {
 	}
 	
 	public Matrix4f getModelViewMatrix(GameObject obj) {
-		Vector3f rot = obj.getTransform().getRotation();
 		modelViewMatrix.identity();
 		modelViewMatrix.translate(obj.getTransform().getPosition());
-		modelViewMatrix.rotateX((float) Math.toRadians(rot.x)).rotateY((float) Math.toRadians(rot.y)).rotateZ((float) Math.toRadians(rot.z));
+		modelViewMatrix.rotate(obj.getTransform().getRotation());
 		modelViewMatrix.scale(obj.getTransform().getScale());
 		return viewMatrix.mul(modelViewMatrix);
 	}

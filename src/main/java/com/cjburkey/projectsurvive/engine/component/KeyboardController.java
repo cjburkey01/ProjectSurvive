@@ -1,5 +1,6 @@
 package com.cjburkey.projectsurvive.engine.component;
 
+import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -7,6 +8,7 @@ import com.cjburkey.projectsurvive.engine.GameComponent;
 import com.cjburkey.projectsurvive.engine.GameEngine;
 import com.cjburkey.projectsurvive.engine.GameObject;
 import com.cjburkey.projectsurvive.engine.Input;
+import com.cjburkey.projectsurvive.engine.MathHelper;
 
 public class KeyboardController extends GameComponent {
 
@@ -40,6 +42,9 @@ public class KeyboardController extends GameComponent {
 		pos.x += velocity.x;
 		pos.y += velocity.y;
 		getParent().getTransform().setPosition(pos);
+		
+		Quaternionf srot = MathHelper.lookAt(getParent().getTransform().getPosition(), new Vector3f(0.0f, 0.0f, -1.0f));
+		getParent().getTransform().setRotation(srot);
 	}
 	
 }

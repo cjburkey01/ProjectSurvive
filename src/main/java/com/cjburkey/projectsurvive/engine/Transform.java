@@ -1,16 +1,17 @@
 package com.cjburkey.projectsurvive.engine;
 
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class Transform {
 	
 	private Vector3f position;
-	private Vector3f rotation;
+	private Quaternionf rotation;
 	private Vector3f scale;
 	
 	public Transform() {
 		position = new Vector3f(0.0f, 0.0f, 0.0f);
-		rotation = new Vector3f(0.0f, 0.0f, 0.0f);
+		rotation = new Quaternionf().identity();
 		scale = new Vector3f(1.0f, 1.0f, 1.0f);
 	}
 	
@@ -22,11 +23,11 @@ public class Transform {
 		return position;
 	}
 	
-	public void setRotation(Vector3f rotation) {
+	public void setRotation(Quaternionf rotation) {
 		this.rotation = rotation;
 	}
 	
-	public Vector3f getRotation() {
+	public Quaternionf getRotation() {
 		return rotation;
 	}
 	
