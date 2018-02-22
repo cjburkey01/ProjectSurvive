@@ -1,7 +1,6 @@
 package com.cjburkey.projectsurvive.engine.component;
 
 import com.cjburkey.projectsurvive.engine.GameComponent;
-import com.cjburkey.projectsurvive.engine.GameEngine;
 import com.cjburkey.projectsurvive.engine.GameObject;
 import com.cjburkey.projectsurvive.engine.Mesh;
 
@@ -11,11 +10,6 @@ public class MeshComponent extends GameComponent {
 	
 	public MeshComponent(GameObject parent) {
 		super(parent);
-	}
-	
-	public void onUpdate() {
-		// TODO: FIX DOUBLE BUG
-		getParent().getTransform().getPosition().x += 1.0f * GameEngine.getEngine().getDeltaTime();
 	}
 	
 	public void onRender() {

@@ -20,6 +20,8 @@ public class GameEngine {
 	
 	private BasicRenderer renderer;
 	
+	private String windowStartTitle;
+	
 	private GameEngine() {
 		ref = new Reflections("com.cjburkey");
 	}
@@ -54,13 +56,16 @@ public class GameEngine {
 	
 	private void startGameLoop() {
 		Logger.log("Starting game loop.");
-		double previous = getTime();
-		double lastFps = getTime();
-		long fps = 0;
+		double last = getTime();
+		double lastFpsCheck = getTime();
+		double fpsTime = 0.3873f;
+		int rfps = 0;
+		if (windowStartTitle == null) {
+			windowStartTitle = window.getTitle();
+		}
 		while (true) {
-			double loopStartTime = getTime();
-			delta = loopStartTime - previous;
-			previous = loopStartTime;
+			double loopStart = getTime();
+			delta = loopStart - last;
 			steps += delta;
 			
 			tick();
@@ -68,27 +73,19 @@ public class GameEngine {
 				window.destroy();
 				break;
 			}
-			fps++;
-			if (loopStartTime - lastFps > 1.0f) {
-				this.fps = fps;
-				fps = 0;
-				lastFps = loopStartTime;
-				Logger.log("TPS: " + getFps() + ". Steps: " + MathHelper.format(getGameTime(), 2));
+			
+			rfps ++;
+			if (loopStart - lastFpsCheck >= fpsTime) {
+				lastFpsCheck = loopStart;
+				double efps = 1 / delta;
+				fps = (int) (rfps / ((fpsTime != 0.0f) ? (fpsTime) : (0.001f)));
+				rfps = 0;
+				window.setTitle(windowStartTitle + " | CFPS: " + MathHelper.format(efps, 2) + " | TFPS: " + fps + " | TIME: " + MathHelper.format(getGameTime(), 2));
 			}
 			
-			sync(loopStartTime);
+			last = loopStart;
 		}
 		Logger.log("Exiting game.");
-	}
-	
-	private void sync(double loopStartTime) {
-		float loopSlot = 1.0f / EXPECTED_TPS;
-		double endTime = loopStartTime + loopSlot;
-		while (getTime() < endTime) {
-			try {
-				Thread.sleep(1);
-			} catch(Exception e) { throw new GameEngineException("Failed to sleep for 1ms in game loop."); }
-		}
 	}
 	
 	public double getGameTime() {
@@ -111,6 +108,7 @@ public class GameEngine {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		RenderEngine.onRender(Scene.getActiveScene().getRoot());
 		
+		Input.onUpdate();
 		window.swapBuffers();
 	}
 	

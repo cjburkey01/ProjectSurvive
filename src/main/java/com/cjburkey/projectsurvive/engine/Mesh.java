@@ -16,7 +16,7 @@ public class Mesh {
 	
 	private int vertexCount;
 	
-	public Mesh() {
+	public Mesh(int i) {
 		vao = glGenVertexArrays();
 		vbo = glGenBuffers();
 		ebo = glGenBuffers();

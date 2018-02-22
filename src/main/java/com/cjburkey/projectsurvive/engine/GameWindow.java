@@ -15,6 +15,7 @@ public class GameWindow {
 	private final GLCapabilities glCaps;
 	
 	private Vector2i size;
+	private String title;
 	
 	public GameWindow(int width, int height, String name) {
 		GLFWErrorCallback.createPrint(System.err).set();
@@ -32,21 +33,45 @@ public class GameWindow {
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 		
-		window = glfwCreateWindow(size.x, size.y, name, 0, 0);
+		window = glfwCreateWindow(size.x, size.y, title = name, 0, 0);
 		if (window == 0) {
 			throw new GameEngineException("Failed to initialize GLFW window.");
 		}
 		center();
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1);	// VSync every frame.
+		setVsync(false);	// VSync every frame.
 		show();
 		
 		glfwSetWindowSizeCallback(window, (window, w, h) -> onResize(new Vector2i(w, h)));
+		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+			if (window != this.window) {
+				return;
+			}
+			if (action == GLFW_PRESS) {
+				Input.onKeyPress(key);
+			}
+			if (action == GLFW_RELEASE) {
+				Input.onKeyRelease(key);
+			}
+		});
 		
 		glCaps = GL.createCapabilities();
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glClearColor(100 / 255.0f, 149 / 255.0f, 237 / 255.0f, 1.0f);
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+		glfwSetWindowTitle(window, title);
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public void setVsync(boolean vsync) {
+		glfwSwapInterval((vsync) ? 1 : 0);
 	}
 	
 	public void setSize(Vector2i size) {

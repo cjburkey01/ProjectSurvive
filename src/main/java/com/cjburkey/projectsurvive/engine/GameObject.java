@@ -34,9 +34,6 @@ public class GameObject {
 		for (GameComponent obj : getComponents()) {
 			obj.onRender();
 		}
-		for (GameObject obj : getChildren()) {
-			obj.onRender();
-		}
 	}
 	
 	public void onDestroy() {
