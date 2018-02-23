@@ -10,9 +10,11 @@ import com.cjburkey.projectsurvive.engine.MathHelper;
 
 public class KeyboardController extends GameComponent {
 
-	public float speed = 2.0f;
+	public float speed = 5.0f;
+	public float fastSpeed = 10.0f;
 	
 	private Vector3f velocity = new Vector3f();
+	private boolean fast = false;
 	
 	public KeyboardController(GameObject parent) {
 		super(parent);
@@ -21,6 +23,7 @@ public class KeyboardController extends GameComponent {
 	public void onUpdate() {
 		velocity.set(0.0f, 0.0f, 0.0f);
 		
+		fast = Input.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT);
 		if (Input.isKeyPressed(GLFW.GLFW_KEY_W)) {
 			velocity.z -= 1.0f;
 		}
@@ -33,12 +36,20 @@ public class KeyboardController extends GameComponent {
 		if (Input.isKeyPressed(GLFW.GLFW_KEY_A)) {
 			velocity.x -= 1.0f;
 		}
+		
+		velocity = MathHelper.transform(getParent().getTransform().getRotation(), velocity);
+		
+		if (Input.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
+			velocity.y += 1.0f;
+		}
+		if (Input.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+			velocity.y -= 1.0f;
+		}
+		
 		if (velocity.x != 0.0f || velocity.y != 0.0f || velocity.z != 0.0f) {
 			velocity.normalize();
 		}
-		
-		velocity = MathHelper.transform(getParent().getTransform().getRotation(), velocity);
-		velocity.mul(speed * (float) GameEngine.getEngine().getDeltaTime());
+		velocity.mul(((fast) ? fastSpeed : speed) * (float) GameEngine.getEngine().getDeltaTime());
 		getParent().getTransform().getPosition().add(velocity);
 	}
 	

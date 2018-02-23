@@ -9,13 +9,14 @@ public class Scene {
 	private static Scene scene;
 	
 	private Camera cam;
+	private GameObject camObj;
 	private GameObject root;
 	
 	private Scene() {
 		root = new GameObject("RootObject");
 		
 		cam = new Camera();
-		GameObject camObj = root.addChild("MainCamera");
+		camObj = root.addChild("MainCamera");
 		camObj.addComponent(new CameraComponent(camObj, cam));
 		for (RenderEngine engine : RenderEngine.getEngines()) {
 			engine.setMainCamera(camObj);
@@ -29,6 +30,10 @@ public class Scene {
 	public static void create() {
 		scene = new Scene();
 		EventHandler.getEventHandler().triggerEvent(new EventSceneCreated(scene));
+	}
+	
+	public GameObject getMainCamera() {
+		return camObj;
 	}
 	
 	public static Scene getActiveScene() {

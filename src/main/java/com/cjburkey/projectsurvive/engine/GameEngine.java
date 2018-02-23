@@ -130,15 +130,20 @@ public class GameEngine {
 		return window;
 	}
 	
-	public static void main(String[] args) {
-		gameEngine = new GameEngine();
+	private void init() {
 		gameEngine.loadGame();
 		gameEngine.createWindow();
 		gameEngine.initRender();
 		RenderEngine.onInit();
+		loadedGame.onInit();
 		Scene.create();
 		gameEngine.startGameLoop();
 		Scene.getActiveScene().getRoot().onDestroy();
+	}
+	
+	public static void main(String[] args) {
+		gameEngine = new GameEngine();
+		gameEngine.init();
 	}
 	
 	public static GameEngine getEngine() {
